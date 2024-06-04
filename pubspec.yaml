@@ -1,0 +1,82 @@
+name: health_excercise
+description: A new Flutter project.
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.1.3 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  geolocator: ^11.0.0
+  permission_handler: ^11.3.1
+  shared_preferences: ^2.2.3
+
+  #Core
+  equatable: ^2.0.5
+  get_it: ^7.6.4
+
+  #Network Dependencies
+  vexana: ^4.0.1
+  dio: ^5.4.3+1
+
+  #State
+  flutter_bloc: ^8.1.3
+
+  # Config
+  easy_localization: ^3.0.3
+
+  #Utility
+  easy_logger: ^0.0.2
+  logger: ^2.0.2+1
+  kartal: ^3.5.0
+  google_fonts: 6.1.0
+  percent_indicator: ^4.2.3
+  vertical_percent_indicator: ^0.0.1
+  table_calendar: ^3.0.9
+
+  #Sensor
+  sensors_plus: ^4.0.1
+
+  #Navigation
+  auto_route: ^7.8.4
+
+  widgets:
+    path: module/widgets
+
+  # Modules
+  gen:
+    path: module/gen
+  common:
+    path: module/common
+  core:
+    path: module/core
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^5.1.0
+  flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.6
+  auto_route_generator: ^7.3.2
+  device_preview: ^1.1.0
+# flutter_launcher_icons:
+#   android: "launcher_icon"
+#   ios: true
+#   image_path: "assets/app/app_icon.png"
+#   min_sdk_android: 21 # android min sdk min:16, default 21
+#   remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/translations/
+    - assets/images/
