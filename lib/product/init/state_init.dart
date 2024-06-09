@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_excercise/feature/auth/viewmodel/user_cubit.dart';
+import 'package:health_excercise/feature/auth/viewmodel/user_state.dart';
 import 'package:health_excercise/product/state/container/product_state_items.dart';
 import 'package:health_excercise/product/state/view_model/product_view_model.dart';
 
@@ -16,6 +18,11 @@ final class StateInit extends StatelessWidget {
       providers: [
         BlocProvider<ProductViewModel>.value(
           value: ProductStateItems.productViewModel,
+        ),
+        BlocProvider<UserCubit>(
+          create: (context) {
+            return UserCubit(const UserState());
+          },
         ),
       ],
       child: child,

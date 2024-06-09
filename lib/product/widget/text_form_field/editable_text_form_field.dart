@@ -37,7 +37,7 @@ class EditableTextFormField extends StatelessWidget {
           decoration: InputDecoration(
             icon: prefixIcon ?? const Icon(Icons.person),
             label: Text(label ?? 'Name'),
-            suffixIcon: suffixIcon ?? const Icon(Icons.edit),
+            suffixIcon: suffixIcon,
             border: InputBorder.none,
           ),
         ),

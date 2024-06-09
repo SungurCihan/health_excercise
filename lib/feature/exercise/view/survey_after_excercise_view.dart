@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:health_excercise/product/init/theme/greys.dart';
+import 'package:health_excercise/product/service/excercise_service.dart';
 import 'package:health_excercise/product/widget/padding/spaces/gaps.dart';
 
 /// SurveyAfterExcercise
@@ -79,10 +82,10 @@ class _SurveyAfterExcerciseViewState extends State<SurveyAfterExcerciseView> {
                   // Butona tıklandığında yapılacak işlemler
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                     Colors.green,
                   ), // Butonun rengini kırmızı yapar
-                  shape: MaterialStateProperty.all(
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                         30,
@@ -90,9 +93,23 @@ class _SurveyAfterExcerciseViewState extends State<SurveyAfterExcerciseView> {
                     ),
                   ),
                 ),
-                child: const Text(
-                  'Tamamla',
-                  style: TextStyle(color: Greys.neutral00),
+                child: TextButton(
+                  child: const Text(
+                    'Tamamla',
+                    style: TextStyle(color: Greys.neutral00),
+                  ),
+                  onPressed: () async {
+                    final assignments = assignJobs(3);
+                    final today = DateTime.now();
+                    for (final element in assignments) {
+                      final index = getIndexOfWeek(element) + 1;
+                      if (index > today.weekday) {
+                        await ExcerciseService.saveExcercise(
+                          today.add(Duration(days: index - today.weekday)),
+                        );
+                      }
+                    }
+                  },
                 ),
               ),
             ],
@@ -165,5 +182,55 @@ class _SurveyAfterExcerciseViewState extends State<SurveyAfterExcerciseView> {
         ),
       ),
     );
+  }
+
+  List<String> assignJobs(int days) {
+    final week = <String>[
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+    final assignments = <String>[];
+
+    while (assignments.length < days) {
+      final day = week[Random().nextInt(week.length)];
+
+      if (assignments.contains(day)) {
+        continue;
+      }
+
+      final dayIndex = week.indexOf(day);
+      final prevDay = dayIndex > 0 ? week[dayIndex - 1] : null;
+      final nextDay = dayIndex < week.length - 1 ? week[dayIndex + 1] : null;
+
+      if (days == 3) {
+        if (assignments.contains(prevDay) ||
+            (nextDay != null && assignments.contains(nextDay))) {
+          continue;
+        }
+      }
+
+      assignments.add(day);
+    }
+
+    return assignments;
+  }
+
+  int getIndexOfWeek(String weekDay) {
+    final week = <String>[
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+
+    return week.indexOf(weekDay);
   }
 }

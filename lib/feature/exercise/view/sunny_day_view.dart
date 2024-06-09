@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:health_excercise/product/navigation/app_router.dart';
+import 'package:health_excercise/feature/exercise/view/exercise_view.dart';
 
 /// Sunny Day View
 @RoutePage()
@@ -32,7 +32,16 @@ class SunnyDayView extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              context.router.push(const ExerciseRoute());
+              final routeData = ModalRoute.of(context)!.settings.arguments;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ExerciseView(),
+                  settings: RouteSettings(
+                    arguments: routeData,
+                  ),
+                ),
+              );
             },
             child: const Text('Hazırsanız Başlayın'),
           ),

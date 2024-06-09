@@ -1,19 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_excercise/feature/auth/viewmodel/user_cubit.dart';
-import 'package:health_excercise/product/init/cache/shared_manager.dart';
-import 'package:health_excercise/product/navigation/app_router.dart';
+import 'package:flutter/services.dart';
+import 'package:health_excercise/feature/exercise/view/sunny_day_view.dart';
 
-/// DataUsage
 @RoutePage()
-class DataUsageView extends StatelessWidget {
-  /// DataUsage constructor
-  const DataUsageView({super.key});
+
+/// Test Excercise View
+class TestExcerciseView extends StatelessWidget {
+  /// Test Excercise View constructor
+  const TestExcerciseView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +29,7 @@ class DataUsageView extends StatelessWidget {
             const Text('Merhaba'),
             const SizedBox(height: 20),
             const Text(
-              'Bu uygulama meme kanseri sonrası bireylerin kanıta dayalı yönergelere uygun olarak fiziksel aktivitelerini geliştirmeleri amacıyla oluşturulmuştur. Uygulama aynı zamanda bir araştırmanın parçasıdır. Hem araştırma hem de uygulamanın iyileştirilmesi için kullanım verilerinizi takip etmemiz ve bunu yapmak için sizin onayınıza ihtiyacımız var. ',
+              'Uygulamayı kullanmaya başlayabilmeniz için Temel Egzersiz Bölgenizin belirlenmesi gerekmektedir. Bu amaçla 6 dakikalık bir test yürüşüyüne tabi tutulacaksınız',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
@@ -39,34 +39,31 @@ class DataUsageView extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     // Kabul et butonuna tıklanınca yapılacak işlemler
-                    await SharedManager.setDataUsage(answer: true);
-                    if (context.mounted) {
-                      final user = context.read<UserCubit>().getUser();
-                      if (user != null && user.age == 'string') {
-                        await context.router.push(const PersonalInfoRoute());
-                      } else {
-                        await context.pushRoute(BottomNavigationBarRoute());
-                      }
-                    }
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SunnyDayView(),
+                        settings: const RouteSettings(
+                          arguments: 360,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
                   child: const Text(
-                    'Kabul Et',
+                    'Devam Et',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Reddet butonuna tıklanınca yapılacak işlemler
-                    SharedManager.setDataUsage(answer: false);
-                  },
+                  onPressed: SystemNavigator.pop,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
                   child: const Text(
-                    'Reddet',
+                    'Uygulamayı Kapat',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

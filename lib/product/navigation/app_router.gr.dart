@@ -41,6 +41,24 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeView(),
       );
     },
+    LoginRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LoginView(),
+      );
+    },
+    PersonalInfoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PersonalInfoView(),
+      );
+    },
+    RegisterRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegisterView(),
+      );
+    },
     SunnyDayRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -51,6 +69,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SurveyAfterExcerciseView(),
+      );
+    },
+    TestExcerciseRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TestExcerciseView(),
       );
     },
   };
@@ -129,6 +153,48 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LoginView]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute({List<PageRouteInfo>? children})
+      : super(
+          LoginRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LoginRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PersonalInfoView]
+class PersonalInfoRoute extends PageRouteInfo<void> {
+  const PersonalInfoRoute({List<PageRouteInfo>? children})
+      : super(
+          PersonalInfoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PersonalInfoRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RegisterView]
+class RegisterRoute extends PageRouteInfo<void> {
+  const RegisterRoute({List<PageRouteInfo>? children})
+      : super(
+          RegisterRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RegisterRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [SunnyDayView]
 class SunnyDayRoute extends PageRouteInfo<void> {
   const SunnyDayRoute({List<PageRouteInfo>? children})
@@ -152,6 +218,20 @@ class SurveyAfterExcerciseRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SurveyAfterExcerciseRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TestExcerciseView]
+class TestExcerciseRoute extends PageRouteInfo<void> {
+  const TestExcerciseRoute({List<PageRouteInfo>? children})
+      : super(
+          TestExcerciseRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TestExcerciseRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -10,6 +10,11 @@ class CalendarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selectedDays = <DateTime>[
+      DateTime.now().add(const Duration(days: 4)),
+      DateTime.now().add(const Duration(days: 7)),
+      DateTime.now().add(const Duration(days: 10)),
+    ];
     return Scaffold(
       backgroundColor: Greys.neutral10,
       appBar: PreferredSize(
@@ -37,6 +42,14 @@ class CalendarView extends StatelessWidget {
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: DateTime.now(),
+              selectedDayPredicate: (day) {
+                return selectedDays.any(
+                  (selectedDay) =>
+                      selectedDay.year == day.year &&
+                      selectedDay.month == day.month &&
+                      selectedDay.day == day.day,
+                );
+              },
             ),
           ),
           const Gaps.heightNormal(),

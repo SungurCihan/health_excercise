@@ -15,69 +15,73 @@ class BottomNavigationBarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => viewModel,
-      child: Stack(
-        children: [
-          const SizedBox.expand(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xffF8F8FC),
-                    Color(0xffF1F1F9),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+    return PopScope(
+      canPop: false,
+      child: BlocProvider(
+        create: (context) => viewModel,
+        child: Stack(
+          children: [
+            const SizedBox.expand(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xffF8F8FC),
+                      Color(0xffF1F1F9),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
               ),
             ),
-          ),
-          BlocConsumer<BottomNavigationBarViewModel, BottomNavigationBarState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              return Scaffold(
-                body: Center(
-                  child: viewModel.pages.elementAt(state.currentPage),
-                ),
-                bottomNavigationBar: Theme(
-                  data: ThemeData(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
+            BlocConsumer<BottomNavigationBarViewModel,
+                BottomNavigationBarState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return Scaffold(
+                  body: Center(
+                    child: viewModel.pages.elementAt(state.currentPage),
                   ),
-                  child: BottomNavigationBar(
-                    selectedFontSize: 12,
-                    currentIndex: state.currentPage,
-                    selectedItemColor: Colors.pink,
-                    backgroundColor: Colors.white,
-                    showUnselectedLabels: true,
-                    showSelectedLabels: true,
-                    type: BottomNavigationBarType.fixed,
-                    onTap: _onItemTapped,
-                    items: const <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Ana Sayfa',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.access_alarm),
-                        label: 'Aktivite',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_month),
-                        label: 'Takvim',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: 'Profil',
-                      ),
-                    ],
+                  bottomNavigationBar: Theme(
+                    data: ThemeData(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                    ),
+                    child: BottomNavigationBar(
+                      selectedFontSize: 12,
+                      currentIndex: state.currentPage,
+                      selectedItemColor: Colors.pink,
+                      backgroundColor: Colors.white,
+                      showUnselectedLabels: true,
+                      showSelectedLabels: true,
+                      type: BottomNavigationBarType.fixed,
+                      onTap: _onItemTapped,
+                      items: const <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.home),
+                          label: 'Ana Sayfa',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.access_alarm),
+                          label: 'Aktivite',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.calendar_month),
+                          label: 'Takvim',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.person),
+                          label: 'Profil',
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

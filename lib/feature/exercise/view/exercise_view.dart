@@ -26,7 +26,7 @@ class _ExcerciseViewState extends State<ExerciseView>
   Position? _lastPosition;
   late final AnimationController _controller;
   double _totalDistance = 0;
-  int levelClock = 10;
+  late final int levelClock;
   static const double _threshold = 3.5;
   int _stepCount = 0;
   double _prevMagnitude = 0;
@@ -34,9 +34,9 @@ class _ExcerciseViewState extends State<ExerciseView>
 
   bool isTimerStopped = false;
 
-  double _calculateMagnitude(UserAccelerometerEvent event) {
-    return sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
-  }
+  // double _calculateMagnitude(UserAccelerometerEvent event) {
+  //   return sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
+  // }
 
   void _startTracking() {
     try {
@@ -81,6 +81,13 @@ class _ExcerciseViewState extends State<ExerciseView>
   @override
   void initState() {
     super.initState();
+
+    final routeData = ModalRoute.of(context)!.settings.arguments;
+    if (routeData != null) {
+      levelClock = routeData as int;
+    } else {
+      levelClock = 600;
+    }
 
     _controller = AnimationController(
       vsync: this,
@@ -166,9 +173,9 @@ class _ExcerciseViewState extends State<ExerciseView>
                   context.router.push(const SurveyAfterExcerciseRoute());
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.cyan),
-                  minimumSize: MaterialStateProperty.all(const Size(155, 45)),
-                  shape: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(Colors.cyan),
+                  minimumSize: WidgetStateProperty.all(const Size(155, 45)),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                         15,
@@ -189,5 +196,11 @@ class _ExcerciseViewState extends State<ExerciseView>
         ),
       ),
     );
+  }
+
+  double _calculateCalories(int steps) {
+    // Ortalama bir adım başına kalori değeri
+    const caloriesPerStep = 0.04;
+    return steps * caloriesPerStep;
   }
 }

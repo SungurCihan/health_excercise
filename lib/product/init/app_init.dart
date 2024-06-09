@@ -42,7 +42,7 @@ final class AppInit {
 
     AppEnviorment.general();
 
-    await GeneralData().getDataUsage();
+    await GeneralData().getIsLogged();
 
     // it must be called after AppEnviorment.general();
     ProductContainer.setup();

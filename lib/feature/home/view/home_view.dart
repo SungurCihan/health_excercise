@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:health_excercise/feature/exercise/view/sunny_day_view.dart';
+import 'package:health_excercise/product/init/cache/shared_manager.dart';
 import 'package:health_excercise/product/init/theme/greys.dart';
-import 'package:health_excercise/product/service/excercise_service.dart';
 import 'package:health_excercise/product/widget/padding/spaces/gaps.dart';
 
 /// Home view
@@ -19,9 +20,11 @@ final class HomeView extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: ExcerciseService.getCourierCoords,
-        child: Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await SharedManager.removeToken();
+        },
+        child: const Icon(Icons.add),
       ),
       backgroundColor: Greys.neutral10,
       body: Padding(
@@ -43,7 +46,7 @@ final class HomeView extends StatelessWidget {
                     ),
                   ),
                   const Gaps.heightLarge(),
-                  _nextExcercise(),
+                  _nextExcercise(context),
                   const Gaps.heightMedium(),
                   const Text(
                     'Unutma, istikrar her şeydir. Sen çok daha fazlazısın. Her gün ileriye doğru bir adım daha at. Hayallerin çok uzakta değil.',
@@ -83,7 +86,7 @@ final class HomeView extends StatelessWidget {
     );
   }
 
-  Row _nextExcercise() {
+  Row _nextExcercise(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -105,16 +108,29 @@ final class HomeView extends StatelessWidget {
                     color: const Color(0xffF2E8ED),
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
                       top: 5,
                       left: 20,
                       bottom: 5,
                       right: 20,
                     ),
-                    child: Text(
-                      'Egzersizi Başlat',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SunnyDayView(),
+                            settings: const RouteSettings(
+                              arguments: 1800,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Egzersizi Başlat',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ),
