@@ -6,21 +6,21 @@ class User with EquatableMixin {
   User({
     required this.name,
     required this.surname,
-    required this.password,
     required this.email,
     required this.generalAnlysisRegion,
     required this.age,
     required this.weight,
     required this.height,
+    this.password,
   });
 
   // JSON'dan dönüştürme
   factory User.fromJson(Map<String, dynamic> json) => User(
         name: json['name'] as String,
         surname: json['surname'] as String,
-        password: json['password'] as String,
+        // password: json['password'] as String,
         email: json['email'] as String,
-        generalAnlysisRegion: json['generalAnlysisRegion'] as String,
+        generalAnlysisRegion: json['generalAnalysisRegion'] as String,
         age: json['age'] as String,
         weight: json['weight'] as int,
         height: json['height'] as int,
@@ -28,7 +28,7 @@ class User with EquatableMixin {
 
   final String name;
   final String surname;
-  final String password;
+  final String? password;
   final String email;
   final String generalAnlysisRegion;
   final String age;
@@ -39,9 +39,9 @@ class User with EquatableMixin {
   Map<String, dynamic> toJson() => {
         'name': name,
         'surname': surname,
-        'password': password,
+        // 'password': password,
         'email': email,
-        'generalAnlysisRegion': generalAnlysisRegion,
+        'generalAnalysisRegion': generalAnlysisRegion,
         'age': age,
         'weight': weight,
         'height': height,

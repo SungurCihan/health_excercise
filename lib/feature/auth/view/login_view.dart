@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_excercise/feature/auth/viewmodel/user_cubit.dart';
+import 'package:health_excercise/feature/exercise/view/sunny_day_view.dart';
 import 'package:health_excercise/product/init/cache/shared_manager.dart';
 import 'package:health_excercise/product/navigation/app_router.dart';
 import 'package:health_excercise/product/service/auth_service.dart';
@@ -79,11 +80,21 @@ class LoginView extends StatelessWidget {
                         context.mounted) {
                       await context.router.push(const PersonalInfoRoute());
                     } else if (user != null &&
-                        user.generalAnlysisRegion == 'string' &&
+                        (user.generalAnlysisRegion == 'string' ||
+                            user.generalAnlysisRegion == 'null') &&
                         context.mounted) {
-                      await context.router.push(const TestExcerciseRoute());
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SunnyDayView(),
+                          settings: const RouteSettings(
+                            arguments: [-1, 360],
+                          ),
+                        ),
+                      );
                     } else {
                       if (context.mounted) {
+                        // SharedManager.setJwtToken(token: token);
                         await context.router.push(BottomNavigationBarRoute());
                       }
                     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_excercise/feature/auth/model/user.dart';
 import 'package:health_excercise/feature/auth/viewmodel/user_cubit.dart';
+import 'package:health_excercise/feature/exercise/view/sunny_day_view.dart';
 import 'package:health_excercise/product/service/auth_service.dart';
 import 'package:health_excercise/product/widget/button/login_button.dart';
 import 'package:health_excercise/product/widget/padding/spaces/gaps.dart';
@@ -101,7 +102,7 @@ class PersonalInfoView extends StatelessWidget {
                   child: LoginButton(
                     text: 'Devam Et',
                     color: const Color(0xffF5E5E8),
-                    onPressed: () {
+                    onPressed: () async {
                       final age = ageController.text;
                       final weight = int.parse(weightController.text);
                       final height = int.parse(heightController.text);
@@ -110,7 +111,7 @@ class PersonalInfoView extends StatelessWidget {
                       final newUser = User(
                         name: currentUser?.name ?? '',
                         surname: currentUser?.surname ?? '',
-                        password: currentUser?.password ?? '',
+                        // password: currentUser?.password ?? '',
                         email: currentUser?.email ?? '',
                         generalAnlysisRegion:
                             currentUser?.generalAnlysisRegion ?? '',
@@ -124,7 +125,19 @@ class PersonalInfoView extends StatelessWidget {
                             height,
                           );
 
-                      AuthService.updateUser(newUser);
+                      await AuthService.updateUser(newUser);
+
+                      if (context.mounted) {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SunnyDayView(),
+                            settings: const RouteSettings(
+                              arguments: [-1, 360],
+                            ),
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),

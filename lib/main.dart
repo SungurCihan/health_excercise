@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,9 +13,20 @@ import 'package:health_excercise/product/state/view_model/product_view_model.dar
 import 'package:widgets/widgets.dart';
 
 Future<void> main() async {
+  HttpOverrides.global = MyHttpOverrides();
   await AppInit().make();
 
   runApp(ProductLocalization(child: const StateInit(child: MyApp())));
+}
+
+/// s
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 /// MyApp

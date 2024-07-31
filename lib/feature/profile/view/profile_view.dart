@@ -20,6 +20,22 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  bool isUserInit = false;
+  late final user;
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  Future<void> getUser() async {
+    user = await AuthService.getUser();
+    setState(() {
+      isUserInit = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final usernameController = TextEditingController(
@@ -54,314 +70,338 @@ class _ProfileViewState extends State<ProfileView> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                height: 120,
-                width: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.fromBorderSide(
-                    BorderSide(
-                      color: CustomLightTheme().themeData.colorScheme.tertiary,
-                    ),
-                  ),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/images/profile.png'),
-                  ),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            const Gaps.heightSmall(),
-            RichText(
-              text: TextSpan(
-                text: 'Toplamda ',
-                style: DefaultTextStyle.of(context).style,
-                children: const <TextSpan>[
-                  TextSpan(
-                    text: '43',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  TextSpan(text: ' kere uygulamaya giriş yaptınız.'),
-                ],
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                text: 'Bugün ',
-                style: DefaultTextStyle.of(context).style,
-                children: const <TextSpan>[
-                  TextSpan(
-                    text: '3',
-                    style: TextStyle(color: Colors.pink),
-                  ),
-                  TextSpan(text: ' kere uygulamaya giriş yaptınız.'),
-                ],
-              ),
-            ),
-            const Gaps.heightNormal(),
-            Padding(
-              padding: const ProjectPadding.symetricHorizontalNormal(),
+      body: isUserInit
+          ? SingleChildScrollView(
               child: Column(
                 children: [
-                  EditableTextFormField(
-                    prefixIcon: const Icon(Icons.person),
-                    label:
-                        'Rumuz - ${context.read<UserCubit>().state.user?.name ?? ''}',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Rumuzunuzu Güncelleyin'),
-                              content: TextFormField(
-                                controller: usernameController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                // Diğer özellikleriniz
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Güncelle'),
-                                  onPressed: () async {
-                                    final currentUser =
-                                        context.read<UserCubit>().getUser();
-                                    final newUser = User(
-                                      name: usernameController.text,
-                                      surname: currentUser?.surname ?? '',
-                                      email: currentUser?.email ?? '',
-                                      password: currentUser?.password ?? '',
-                                      generalAnlysisRegion:
-                                          currentUser?.generalAnlysisRegion ??
-                                              '',
-                                      age: currentUser?.age ?? '',
-                                      weight: currentUser?.weight ?? 0,
-                                      height: currentUser?.height ?? 0,
-                                    );
-
-                                    context.read<UserCubit>().setUser(newUser);
-
-                                    await AuthService.updateUser(newUser);
-
-                                    setState(() {});
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                  Center(
+                    child: Container(
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.fromBorderSide(
+                          BorderSide(
+                            color: CustomLightTheme()
+                                .themeData
+                                .colorScheme
+                                .tertiary,
+                          ),
+                        ),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/profile.png'),
+                        ),
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
-                  const Gaps.heightMedium(),
-                  EditableTextFormField(
-                    prefixIcon: const Icon(Icons.calendar_today),
-                    label:
-                        'Yaş - ${context.read<UserCubit>().state.user?.age ?? ''}',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Yaşınızı Güncelleyin'),
-                              content: TextFormField(
-                                maxLength: 2,
-                                controller: ageTextController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                decoration: const InputDecoration(
-                                  counterText: '',
-                                ),
-                                // Diğer özellikleriniz
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Güncelle'),
-                                  onPressed: () async {
-                                    final currentUser =
-                                        context.read<UserCubit>().getUser();
-                                    final newUser = User(
-                                      name: currentUser?.name ?? '',
-                                      surname: currentUser?.surname ?? '',
-                                      email: currentUser?.email ?? '',
-                                      password: currentUser?.password ?? '',
-                                      generalAnlysisRegion:
-                                          currentUser?.generalAnlysisRegion ??
-                                              '',
-                                      age: ageTextController.text,
-                                      weight: currentUser?.weight ?? 0,
-                                      height: currentUser?.height ?? 0,
-                                    );
-
-                                    context.read<UserCubit>().setUser(newUser);
-
-                                    await AuthService.updateUser(newUser);
-
-                                    setState(() {});
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                  const Gaps.heightSmall(),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Toplamda ',
+                      style: DefaultTextStyle.of(context).style,
+                      children: const <TextSpan>[
+                        TextSpan(
+                          text: '43',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        TextSpan(text: ' kere uygulamaya giriş yaptınız.'),
+                      ],
                     ),
                   ),
-                  const Gaps.heightMedium(),
-                  EditableTextFormField(
-                    prefixIcon: const Icon(Icons.fitness_center),
-                    label:
-                        'Ağırlık - ${context.read<UserCubit>().state.user?.weight ?? ''} kg',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Kilonuzu Güncelleyin'),
-                              content: TextFormField(
-                                maxLength: 3,
-                                controller: weightTextController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                decoration: const InputDecoration(
-                                  counterText: '',
-                                ),
-                                // Diğer özellikleriniz
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Güncelle'),
-                                  onPressed: () async {
-                                    final currentUser =
-                                        context.read<UserCubit>().getUser();
-                                    final newUser = User(
-                                      name: currentUser?.name ?? '',
-                                      surname: currentUser?.surname ?? '',
-                                      email: currentUser?.email ?? '',
-                                      password: currentUser?.password ?? '',
-                                      generalAnlysisRegion:
-                                          currentUser?.generalAnlysisRegion ??
-                                              '',
-                                      age: currentUser?.age ?? '',
-                                      weight:
-                                          int.parse(weightTextController.text),
-                                      height: currentUser?.height ?? 0,
-                                    );
-
-                                    context.read<UserCubit>().setUser(newUser);
-
-                                    await AuthService.updateUser(newUser);
-
-                                    setState(() {});
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                  RichText(
+                    text: TextSpan(
+                      text: 'Bugün ',
+                      style: DefaultTextStyle.of(context).style,
+                      children: const <TextSpan>[
+                        TextSpan(
+                          text: '3',
+                          style: TextStyle(color: Colors.pink),
+                        ),
+                        TextSpan(text: ' kere uygulamaya giriş yaptınız.'),
+                      ],
                     ),
                   ),
-                  const Gaps.heightMedium(),
-                  EditableTextFormField(
-                    prefixIcon: const Icon(Icons.height),
-                    label:
-                        'Boy - ${context.read<UserCubit>().state.user?.height ?? ''} cm',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Boyunuzu Güncelleyin'),
-                              content: TextFormField(
-                                maxLength: 3,
-                                controller: heightTextController,
-                                // initialValue:
-                                //     context.read<UserCubit>().state.user?.age,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                decoration: const InputDecoration(
-                                  counterText: '',
-                                ),
-                                // Diğer özellikleriniz
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Güncelle'),
-                                  onPressed: () async {
-                                    final currentUser =
-                                        context.read<UserCubit>().getUser();
-                                    final newUser = User(
-                                      name: currentUser?.name ?? '',
-                                      surname: currentUser?.surname ?? '',
-                                      email: currentUser?.email ?? '',
-                                      password: currentUser?.password ?? '',
-                                      generalAnlysisRegion:
-                                          currentUser?.generalAnlysisRegion ??
-                                              '',
-                                      age: currentUser?.age ?? '',
-                                      weight: currentUser?.weight ?? 0,
-                                      height:
-                                          int.parse(heightTextController.text),
-                                    );
+                  const Gaps.heightNormal(),
+                  Padding(
+                    padding: const ProjectPadding.symetricHorizontalNormal(),
+                    child: Column(
+                      children: [
+                        EditableTextFormField(
+                          prefixIcon: const Icon(Icons.person),
+                          label:
+                              'Rumuz - ${user.name == 'string' ? '' : user.name}',
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Rumuzunuzu Güncelleyin'),
+                                    content: TextFormField(
+                                      controller: usernameController,
 
-                                    context.read<UserCubit>().setUser(newUser);
+                                      // Diğer özellikleriniz
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Güncelle'),
+                                        onPressed: () async {
+                                          final currentUser = context
+                                              .read<UserCubit>()
+                                              .getUser();
+                                          final newUser = User(
+                                            name: usernameController.text,
+                                            surname: currentUser?.surname ?? '',
+                                            email: currentUser?.email ?? '',
+                                            password:
+                                                currentUser?.password ?? '',
+                                            generalAnlysisRegion: currentUser
+                                                    ?.generalAnlysisRegion ??
+                                                '',
+                                            age: currentUser?.age ?? '',
+                                            weight: currentUser?.weight ?? 0,
+                                            height: currentUser?.height ?? 0,
+                                          );
 
-                                    await AuthService.updateUser(newUser);
+                                          context
+                                              .read<UserCubit>()
+                                              .setUser(newUser);
 
-                                    setState(() {});
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                                          await AuthService.updateUser(newUser);
+
+                                          setState(() {});
+                                          if (context.mounted) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        const Gaps.heightMedium(),
+                        EditableTextFormField(
+                          prefixIcon: const Icon(Icons.calendar_today),
+                          label:
+                              'Yaş - ${user.age == 'string' ? '' : user.age}',
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Yaşınızı Güncelleyin'),
+                                    content: TextFormField(
+                                      maxLength: 2,
+                                      controller: ageTextController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      decoration: const InputDecoration(
+                                        counterText: '',
+                                      ),
+                                      // Diğer özellikleriniz
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Güncelle'),
+                                        onPressed: () async {
+                                          final currentUser = context
+                                              .read<UserCubit>()
+                                              .getUser();
+                                          final newUser = User(
+                                            name: currentUser?.name ?? '',
+                                            surname: currentUser?.surname ?? '',
+                                            email: currentUser?.email ?? '',
+                                            password:
+                                                currentUser?.password ?? '',
+                                            generalAnlysisRegion: currentUser
+                                                    ?.generalAnlysisRegion ??
+                                                '',
+                                            age: ageTextController.text,
+                                            weight: currentUser?.weight ?? 0,
+                                            height: currentUser?.height ?? 0,
+                                          );
+
+                                          context
+                                              .read<UserCubit>()
+                                              .setUser(newUser);
+
+                                          await AuthService.updateUser(newUser);
+
+                                          setState(() {});
+                                          if (context.mounted) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              getUser();
+                            },
+                          ),
+                        ),
+                        const Gaps.heightMedium(),
+                        EditableTextFormField(
+                          prefixIcon: const Icon(Icons.fitness_center),
+                          label: 'Ağırlık - ${user.weight ?? ''} kg',
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Kilonuzu Güncelleyin'),
+                                    content: TextFormField(
+                                      maxLength: 3,
+                                      controller: weightTextController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      decoration: const InputDecoration(
+                                        counterText: '',
+                                      ),
+                                      // Diğer özellikleriniz
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Güncelle'),
+                                        onPressed: () async {
+                                          final currentUser = context
+                                              .read<UserCubit>()
+                                              .getUser();
+                                          final newUser = User(
+                                            name: currentUser?.name ?? '',
+                                            surname: currentUser?.surname ?? '',
+                                            email: currentUser?.email ?? '',
+                                            password:
+                                                currentUser?.password ?? '',
+                                            generalAnlysisRegion: currentUser
+                                                    ?.generalAnlysisRegion ??
+                                                '',
+                                            age: currentUser?.age ?? '',
+                                            weight: int.parse(
+                                              weightTextController.text,
+                                            ),
+                                            height: currentUser?.height ?? 0,
+                                          );
+
+                                          context
+                                              .read<UserCubit>()
+                                              .setUser(newUser);
+
+                                          await AuthService.updateUser(newUser);
+
+                                          setState(() {});
+                                          if (context.mounted) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        const Gaps.heightMedium(),
+                        EditableTextFormField(
+                          prefixIcon: const Icon(Icons.height),
+                          label: 'Boy - ${user.height} cm',
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Boyunuzu Güncelleyin'),
+                                    content: TextFormField(
+                                      maxLength: 3,
+                                      controller: heightTextController,
+                                      // initialValue:
+                                      //     context.read<UserCubit>().state.user?.age,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      decoration: const InputDecoration(
+                                        counterText: '',
+                                      ),
+                                      // Diğer özellikleriniz
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Güncelle'),
+                                        onPressed: () async {
+                                          final currentUser = context
+                                              .read<UserCubit>()
+                                              .getUser();
+                                          final newUser = User(
+                                            name: currentUser?.name ?? '',
+                                            surname: currentUser?.surname ?? '',
+                                            email: currentUser?.email ?? '',
+                                            password:
+                                                currentUser?.password ?? '',
+                                            generalAnlysisRegion: currentUser
+                                                    ?.generalAnlysisRegion ??
+                                                '',
+                                            age: currentUser?.age ?? '',
+                                            weight: currentUser?.weight ?? 0,
+                                            height: int.parse(
+                                              heightTextController.text,
+                                            ),
+                                          );
+
+                                          context
+                                              .read<UserCubit>()
+                                              .setUser(newUser);
+
+                                          await AuthService.updateUser(newUser);
+
+                                          setState(() {});
+                                          if (context.mounted) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        const Gaps.heightMedium(),
+                        EditableTextFormField(
+                          prefixIcon: const Icon(Icons.sports),
+                          label:
+                              'Temel Egzersiz Bölgesi - ${user.generalAnlysisRegion == 'null' ? '' : user.generalAnlysisRegion}',
+                        ),
+                      ],
                     ),
-                  ),
-                  const Gaps.heightMedium(),
-                  EditableTextFormField(
-                    prefixIcon: const Icon(Icons.sports),
-                    label:
-                        'Temel Egzersiz Bölgesi - ${context.read<UserCubit>().state.user?.generalAnlysisRegion ?? ''}',
                   ),
                 ],
               ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

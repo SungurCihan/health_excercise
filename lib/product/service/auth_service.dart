@@ -11,8 +11,8 @@ class AuthService {
   /// register
   static Future<bool> register(String username, String password) async {
     try {
-      final response = await dio().post<bool>(
-        'http://165.232.75.224:8080/auth/saveuser',
+      final response = await dio().post(
+        'https://45.147.46.202/auth/saveuser',
         data: {
           'username': username,
           'password': password,
@@ -44,7 +44,7 @@ class AuthService {
   ) async {
     try {
       final response = await dio().post(
-        'http://165.232.75.224:8080/api/user/login',
+        'https://45.147.46.202/api/user/login',
         data: {
           'username': username,
           'password': password,
@@ -53,11 +53,11 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
-        // await SharedManager.setJwtToken(
-        //   token: data['jwtToken'].toString(),
-        // );
+        await SharedManager.setJwtToken(
+          token: data['jwtToken'].toString(),
+        );
 
-        final result = await getUser(data['jwtToken'].toString());
+        final result = await getUser();
 
         if (result != null && context.mounted) {
           context.read<UserCubit>().setUser(result);
@@ -73,13 +73,13 @@ class AuthService {
   }
 
   /// get user
-  static Future<User?> getUser(String jwt) async {
+  static Future<User?> getUser() async {
     try {
       final response = await dio().get(
-        'http://165.232.75.224:8080/api/user/get',
+        'https://45.147.46.202/api/user/get',
         options: Options(
           headers: {
-            'Authorization': 'Bearer $jwt',
+            'Authorization': 'Bearer ${await SharedManager.getJwtToken()}',
           },
         ),
       );
@@ -91,7 +91,7 @@ class AuthService {
           password: response.data['password'].toString(),
           email: response.data['email'].toString(),
           generalAnlysisRegion:
-              response.data['generalAnlysisRegion'].toString(),
+              response.data['generalAnalysisRegion'].toString(),
           age: response.data['age'].toString(),
           weight: response.data['weight'] as int,
           height: response.data['height'] as int,
@@ -103,10 +103,11 @@ class AuthService {
     return null;
   }
 
+  /// update user
   static Future<User?> updateUser(User user) async {
     try {
       final response = await dio().put(
-        'http://165.232.75.224:8080/api/user/update',
+        'https://45.147.46.202/api/user/update',
         data: user.toJson(),
         options: Options(
           headers: {
